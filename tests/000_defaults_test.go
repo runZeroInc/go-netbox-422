@@ -85,12 +85,12 @@ func HGetDefaults(t *testing.T, client *netbox.APIClient) *Defaults {
 		fatalHttp(t, "Failed to create site", err, res)
 	}
 
-	deviceRole := netbox.DeviceRoleRequest{
+	deviceRole := netbox.WritableDeviceRoleRequest{
 		Name: deviceRoleName + randString(4),
 		Slug: deviceRoleName + randString(4),
 	}
 
-	newDeviceRole, res, err := client.DcimAPI.DcimDeviceRolesCreate(context.Background()).DeviceRoleRequest(deviceRole).Execute()
+	newDeviceRole, res, err := client.DcimAPI.DcimDeviceRolesCreate(context.Background()).WritableDeviceRoleRequest(deviceRole).Execute()
 	if err != nil {
 		fatalHttp(t, "Failed to create device role", err, res)
 	}
@@ -108,7 +108,7 @@ func HGetDefaults(t *testing.T, client *netbox.APIClient) *Defaults {
 	deviceType := netbox.WritableDeviceTypeRequest{
 		Model:        deviceTypeName + randString(4),
 		Slug:         deviceTypeName + randString(4),
-		Manufacturer: *netbox.NewBriefManufacturerRequest(newManufacturer.Name, newManufacturer.Slug),
+		Manufacturer: netbox.BriefDeviceTypeRequestManufacturer{Int32: &newManufacturer.Id},
 	}
 
 	newDeviceType, res, err := client.DcimAPI.DcimDeviceTypesCreate(context.Background()).WritableDeviceTypeRequest(deviceType).Execute()
@@ -120,9 +120,9 @@ func HGetDefaults(t *testing.T, client *netbox.APIClient) *Defaults {
 
 	device := netbox.WritableDeviceWithConfigContextRequest{
 		Name:       *netbox.NewNullableString(&name),
-		Role:       *netbox.NewBriefDeviceRoleRequest(newDeviceRole.Name, newDeviceRole.Slug),
-		Site:       *netbox.NewBriefSiteRequest(newSite.Name, newSite.Slug),
-		DeviceType: *netbox.NewBriefDeviceTypeRequest(*netbox.NewBriefManufacturerRequest(newManufacturer.Name, newManufacturer.Slug), newDeviceType.Model, newDeviceType.Slug),
+		Role:       netbox.DeviceWithConfigContextRequestRole{Int32: &newDeviceRole.Id},
+		Site:       netbox.DeviceWithConfigContextRequestSite{Int32: &newSite.Id},
+		DeviceType: netbox.DeviceBayTemplateRequestDeviceType{Int32: &newDeviceType.Id},
 	}
 
 	newDevice, res, err := client.DcimAPI.DcimDevicesCreate(context.Background()).WritableDeviceWithConfigContextRequest(device).Execute()
