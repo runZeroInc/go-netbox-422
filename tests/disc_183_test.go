@@ -40,7 +40,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/netbox-community/go-netbox/v4"
+	"github.com/runZeroInc/go-netbox-422"
 )
 
 type Seed183Disc struct {

@@ -1,6 +1,3 @@
-module github.com/netbox-community/go-netbox/v4
+module github.com/runZeroInc/go-netbox-422
 
 go 1.18
-
-require (
-)
