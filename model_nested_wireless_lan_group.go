@@ -274,7 +274,6 @@ func (o *NestedWirelessLANGroup) UnmarshalJSON(data []byte) (err error) {
 		"display",
 		"name",
 		"slug",
-		"_depth",
 	}
 
 	// defaultValueFuncMap captures the default values for required properties.
